@@ -87,7 +87,7 @@ openssl genrsa -out sender_private.pem 2048
 openssl rsa -in sender_private.pem -pubout -out sender_public.pem
 ```
 ## 2: Sign the data.txt file
--Sign the data.txt file and save it to the data.sig file to send to Bob:
+-Alice sign the data.txt file by his private key and file data.txt by SHA256 and save it to the data.sig file to send to Bob:
 ```sh
 openssl dgst -sha256 -sign sender_private.pem -out data.sig data.txt
 ```
