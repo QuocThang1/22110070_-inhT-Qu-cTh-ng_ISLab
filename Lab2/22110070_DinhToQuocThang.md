@@ -1,4 +1,4 @@
-# Lab #1,22110070, Dinh To Quoc Thang, INSE331280E_02FIE
+# Lab #1,22110070, Dinh To Quoc Thang, INSE331280E_01FIE
 # Task 1: Transfer files between computers  
 **Question 1**: 
 Conduct transfering a single plaintext file between 2 computers, 
