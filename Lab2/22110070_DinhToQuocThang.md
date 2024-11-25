@@ -80,7 +80,7 @@ openssl dgst -sha256 -sign sender_private.pem -out data.sig data.txt
 
 ![image](https://github.com/user-attachments/assets/217ed7d6-0f6e-4f84-a9bd-07e69ec9fa54)
 
-## 4-After receiving the file Bob verifies the signature:
+## 4: After receiving the file Bob verifies the signature:
 -This is the command Bob uses to verify the signature by use data.txt, data.sig files and the public key sender_public.pem :
 ```sh
 openssl dgst -sha256 -verify sender_public.pem -signature data.sig data.txt
@@ -90,9 +90,22 @@ openssl dgst -sha256 -verify sender_public.pem -signature data.sig data.txt
 
 =>As we have seen the result is Verified OK so the file is authentic that Alice send to Bob and Bob receive from Alice.
 
+## 5: Integrity check
+-From Alice, generate a checksum for the file using the SHA256 hash function
+```sh
+sha256sum data.txt > checksum.txt
+```
+-This is the content of the checksum.txt file after using the SHA256 function to hash the data.txt file.
+![image](https://github.com/user-attachments/assets/98e0ec28-62ac-41dd-8daa-97da430223fe)
 
+-Bob receives the checksum.txt file from alice
+```sh
+docker cp alice-10.9.0.5:/home/lab/checksum.txt bob-10.9.0.6:/home/lab/
+```
+-After Bob receives the checksum.txt file from Alice, Bob uses SHA256 to recalculate the hash and see if it matches the checksum.txt.
+![image](https://github.com/user-attachments/assets/296af0ef-bcf8-4a93-8e43-4b0fc5abac78)
 
-
+-Displaying an "OK" message proves that the message has not been changed and ensures the integrity of the message.
 
 
 
