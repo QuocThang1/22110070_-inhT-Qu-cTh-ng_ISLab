@@ -103,7 +103,7 @@ openssl dgst -sha256 -sign sender_private.pem -out data.sig data.txt
 ```sh
 openssl dgst -sha256 -verify sender_public.pem -signature data.sig data.txt
 ```
--If the result is Verified OK, the file is authentic, if there is an error, the file may have been modified or the signature is invalid:
+-If the result is Verified OK, it means that the code that Bob calculated from the public key and the data.txt file using the SHA256 hash function matches the code in the received data.sig file, proving the authenticity of the received data.txt file. If there is an error, the file may have been modified or the signature is invalid:
 ![image](https://github.com/user-attachments/assets/bcf076c9-baa7-4844-b7b0-3d1d9eebae5a)
 
 =>As we have seen the result is Verified OK so the file is authentic and integrity  that Alice send to Bob, Bob receive from Alice and the file hasn't been changed.
