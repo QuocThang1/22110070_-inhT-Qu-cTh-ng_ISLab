@@ -46,6 +46,24 @@ Then Bob compares the HMAC code in the data.hmac.verify file that he calculated 
 
 =>If there is no difference, it means the file has not been changed and you will see no result returned. Therefore the HMAC that Bob calculated is the same as the HMAC that Alice
 
+## 5: Integrity check
+-From Alice, generate a checksum for the file using the SHA256 hash function
+```sh
+sha256sum data.txt > checksum.txt
+```
+-This is the content of the checksum.txt file after using the SHA256 function to hash the data.txt file.
+![image](https://github.com/user-attachments/assets/98e0ec28-62ac-41dd-8daa-97da430223fe)
+
+-Bob receives the checksum.txt file from alice
+```sh
+docker cp alice-10.9.0.5:/home/lab/checksum.txt bob-10.9.0.6:/home/lab/
+```
+-After Bob receives the checksum.txt file from Alice, Bob uses SHA256 to recalculate the hash and see if it matches the checksum.txt.
+![image](https://github.com/user-attachments/assets/296af0ef-bcf8-4a93-8e43-4b0fc5abac78)
+
+-Displaying an "OK" message proves that the message has not been changed and ensures the integrity of the message.
+
+
 Conclusion: Alice performs the process of generating the HMAC, sending the file and the HMAC, and then verifying the HMAC on Bob, two important aspects of security are demonstrated:
 
 -Integrity through comparing the HMAC between Alice and Bob to ensure that the file contents have not been altered in transit
@@ -88,24 +106,7 @@ openssl dgst -sha256 -verify sender_public.pem -signature data.sig data.txt
 -If the result is Verified OK, the file is authentic, if there is an error, the file may have been modified or the signature is invalid:
 ![image](https://github.com/user-attachments/assets/bcf076c9-baa7-4844-b7b0-3d1d9eebae5a)
 
-=>As we have seen the result is Verified OK so the file is authentic that Alice send to Bob and Bob receive from Alice.
-
-## 5: Integrity check
--From Alice, generate a checksum for the file using the SHA256 hash function
-```sh
-sha256sum data.txt > checksum.txt
-```
--This is the content of the checksum.txt file after using the SHA256 function to hash the data.txt file.
-![image](https://github.com/user-attachments/assets/98e0ec28-62ac-41dd-8daa-97da430223fe)
-
--Bob receives the checksum.txt file from alice
-```sh
-docker cp alice-10.9.0.5:/home/lab/checksum.txt bob-10.9.0.6:/home/lab/
-```
--After Bob receives the checksum.txt file from Alice, Bob uses SHA256 to recalculate the hash and see if it matches the checksum.txt.
-![image](https://github.com/user-attachments/assets/296af0ef-bcf8-4a93-8e43-4b0fc5abac78)
-
--Displaying an "OK" message proves that the message has not been changed and ensures the integrity of the message.
+=>As we have seen the result is Verified OK so the file is authentic and integrity  that Alice send to Bob, Bob receive from Alice and the file hasn't been changed.
 
 
 
