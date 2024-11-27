@@ -108,5 +108,130 @@ openssl dgst -sha256 -verify sender_public.pem -signature data.sig data.txt
 
 =>As we have seen the result is Verified OK so the file is authentic and integrity  that Alice send to Bob, Bob receive from Alice and the file hasn't been changed.
 
+# Task 3: Firewall configuration
+**Question 1**:
+From VMs of previous tasks, install iptables and configure one of the 2 VMs as a web and ssh server. Demonstrate your ability to block/unblock http, icmp, ssh requests from the other host.
+
+**Answer 1**:
+The ip of Bob is 10.9.0.6
+The ip of Alice is 10.9.0.5
+## 1: I will go to Bob container to set up Bob as a web and ssh server
+![image](https://github.com/user-attachments/assets/054e9e38-c654-4dd8-8ae7-efc9c52014b7)
+
+## 2: I install iptable on Bob by command
+```sh
+apt install iptables
+```
+![image](https://github.com/user-attachments/assets/8d138ff3-806a-45ce-9ef1-dd47a780ba8d)
+
+## 3: List rules of iptables on Bob
+![image](https://github.com/user-attachments/assets/d795b4e7-52c6-4d89-9c5c-f64db8ecf598)
+
+## 4: Install openssh-server, apache2 and check status of them on Bob
+-Install openssh-server:
+```sh
+apt install openssh-server
+```
+![image](https://github.com/user-attachments/assets/db3b4869-055b-434b-ade6-3df6bfe51673)
+
+-Install apache2:
+```sh
+apt install apache2
+```
+![image](https://github.com/user-attachments/assets/169b0444-8c16-48db-9466-4dbac64d8cb1)
+
+-Check status of openssh-server:
+```sh
+service ssh start
+service ssh status
+```
+![image](https://github.com/user-attachments/assets/180c1f01-9de4-4c71-a82e-e130d1584ff3)
+=>This mean ssh is running
+
+-Check status of apache2:
+```sh
+service apache2 start
+service apache2 status
+```
+![image](https://github.com/user-attachments/assets/f7a18e33-f796-4e0e-a6c6-e024c01c59f6)
+=>This mean apache2 is running
+
+## 5: Block http, icmp, ssh requests 
+-Block http by using command on Bob side:
+```sh
+sudo iptables -A INPUT -p tcp --dport 80 -s 10.9.0.5 -j DROP
+```
+![image](https://github.com/user-attachments/assets/71369509-830d-4c02-a435-ee1d95c21842)
+
+-Try to access http from Alice but no HTML send response on Alice side:
+![image](https://github.com/user-attachments/assets/45baf79a-3c9b-495a-bd44-f2b7f9c09814)
+
+-Block incoming and outoging icmp by using command on Bob side:
+```sh
+sudo iptables -A INPUT -p icmp --icmp-type echo-request -s 10.9.0.5 -j DROP
+sudo iptables -A OUTPUT -p icmp --icmp-type echo-request -d 10.9.0.5 -j DROP
+```
+![image](https://github.com/user-attachments/assets/69a22caa-9945-44ff-831b-2cc251d3d0d1)
+
+-Try to ping from Alice by using command on Alice side:
+![image](https://github.com/user-attachments/assets/790abd61-50e9-4ecb-b222-b9818e2a36cd)
+=>We can see there is no packet received.
+
+-Block ssh requests by using command on Bob side:
+```sh
+sudo iptables -A INPUT -p tcp --dport 22 -s 10.9.0.5 -j DROP
+```
+![image](https://github.com/user-attachments/assets/a578aa32-cd34-47b6-a52d-892032353ffb)
+
+-Try to send file data.txt from Alice by using command on Alice side:
+```sh
+scp data.txt bob@10.9.0.6:/home/lab
+```
+![image](https://github.com/user-attachments/assets/f6a56a1e-cd35-40ec-8494-8f70e1c6a7e6)
+=>We can see there is no connection
+
+## 6: Unblock http, icmp, ssh requests
+-Unblock http request by using command on Bob side:
+```sh
+sudo iptables -D INPUT 1
+```
+![image](https://github.com/user-attachments/assets/41057cc4-5929-4873-83bc-b2f8c0e99a54)
+
+-Try to access http by using command on Alice side:
+```sh
+curl http://10.9.0.6
+```
+![image](https://github.com/user-attachments/assets/b7a1ad61-9c11-48da-9c3e-bb051092807a)
+=>We can see there is html send back that means access http from Alice success
+
+-Unlock icmp requests by using command on Bob side:
+```sh
+sudo iptables -D INPUT 1
+sudo iptables -D OUTPUT 1
+```
+![image](https://github.com/user-attachments/assets/8ef50b47-1e9b-4385-bed5-7104500e8124)
+
+-Try to ping from Alice by using command:
+```sh
+ping 10.9.0.6
+```
+![image](https://github.com/user-attachments/assets/328018df-ac7b-4743-8a24-d7ea22064c38)
+=>There is 7 packet transmitted and also 7 packets received it means ping success
+
+-Unblock ssh by using command on Bob side:
+```sh
+sudo iptables -D INPUT 1
+```
+![image](https://github.com/user-attachments/assets/b13a4746-ce9d-4c67-89a5-81eb64716aa4)
+
+-Try to send file data.txt to Bob by using command on Alice side:
+```sh
+scp data.txt bob@10.9.0.6:/home/lab
+```
+![image](https://github.com/user-attachments/assets/76bb9229-9662-4440-b51f-47bab386d412)
+
+
+
+
 
 
